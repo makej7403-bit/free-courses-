@@ -1,14 +1,14 @@
-// pages/auth.js
+"use client";
 
 import { useEffect } from "react";
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 // Your Firebase Config
 const firebaseConfig = {
@@ -18,34 +18,76 @@ const firebaseConfig = {
   projectId: "fir-u-c-students-web",
   storageBucket: "fir-u-c-students-web.firebasestorage.app",
   messagingSenderId: "113569186739",
-  appId: "1:113569186739:web:d8daf21059f43a79e841c6"
+  appId: "1:113569186739:web:d8daf21059f43a79e841c6",
 };
 
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// Initialize Firebase only ONCE
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
+
 const provider = new GoogleAuthProvider();
+const auth = getAuth();
 
 export default function AuthPage() {
   const router = useRouter();
 
   const loginWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+
+      const user = result.user;
+      const name = user.displayName;
+      const email = user.email;
+
+      // SAVE USER TO LOCAL STORAGE DB
+      const existing = JSON.parse(localStorage.getItem("users_db")) || [];
+
+      existing.push({
+        name,
+        email,
+        date: new Date().toLocaleString(),
+      });
+
+      localStorage.setItem("users_db", JSON.stringify(existing));
+
+      // Admin detection
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+      if (email === adminEmail) {
+        localStorage.setItem(
+          "admin_account",
+          JSON.stringify({ name: "Akin S. Sokpah", email })
+        );
+
+        alert("Welcome Admin Akin! Redirecting to admin panel...");
+        router.push("/admin");
+        return;
+      }
+
+      // Normal user login redirect
       alert("Login successful! Redirecting...");
       router.push("/dashboard");
+
     } catch (error) {
       alert("Error logging in: " + error.message);
     }
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push("/dashboard"); // Redirect if already logged in
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+
+      // Auto login redirect for logged-in users
+      if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
       }
     });
-  }, []);
+
+    return () => unsubscribe();
+  }, [router]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-blue-50">
