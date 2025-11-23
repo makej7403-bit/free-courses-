@@ -1,0 +1,113 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Body styling */
+body {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5e9d3, #c7e6ff);
+  color: #222;
+  overflow-x: hidden;
+}
+
+/* Center container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #4c9eff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+.btn:hover {
+  background: #1a7de0;
+}
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 10px 0;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Inputs */
+input {
+  padding: 12px 14px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #4c9eff;
+  box-shadow: 0 0 0 3px rgba(76, 158, 255, 0.3);
+}
+
+/* Header */
+header {
+  width: 100%;
+  padding: 18px;
+  background: #ffffffcc;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Header text logo */
+.brand {
+  font-size: 26px;
+  font-weight: bold;
+  color: #003b72;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #003b72;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+nav a:hover {
+  color: #007bff;
+}
+
+/* Footer */
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  background: #ffffffcc;
+  color: #555;
+  text-align: center;
+}
